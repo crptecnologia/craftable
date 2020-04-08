@@ -1,0 +1,61 @@
+<?php
+
+namespace Brackets\AdminGenerator\Tests\Feature\Views;
+
+use Brackets\AdminGenerator\Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\File;
+
+class FullFormTest extends TestCase
+{
+    use DatabaseMigrations;
+
+    /** @test */
+    public function view_full_form_should_get_auto_generated(): void
+    {
+        $formPath = base_path('Modules/Category/Resources/views/category/form.blade.php');
+        $formJsPath = base_path('Modules/Category/Resources/js/category/Form.js');
+
+        $this->assertFileNotExists($formPath);
+        $this->assertFileNotExists($formJsPath);
+
+        $this->artisan('admin:generate:full-form', [
+            'module' => 'Category',
+            'table_name' => 'categories'
+        ]);
+
+        $this->assertFileExists($formPath);
+        $this->assertFileExists($formJsPath);
+        $this->assertStringStartsWith('@extends(\'brackets/admin-ui::admin.layout.default\')', File::get($formPath));
+        $this->assertStringStartsWith('import AppForm from \'../../../../../Core/Resources/assets/js/app-components/Form/AppForm\';
+
+Vue.component(\'category-form\', {
+    mixins: [AppForm]', File::get($formJsPath));
+    }
+
+    /** @test */
+    public function you_can_pass_your_own_file_path(): void
+    {
+        $formPath = base_path("Modules/Category/Resources/views/profile/edit-password.blade.php");
+        $formJsPath = base_path("Modules/Category/Resources/js/profile-edit-password/Form.js");
+
+        $this->assertFileNotExists($formPath);
+        $this->assertFileNotExists($formJsPath);
+
+        $this->artisan('admin:generate:full-form', [
+            'module' => 'Category',
+            'table_name' => 'categories',
+            '--file-name' => 'profile/edit-password'
+        ]);
+
+        $this->assertFileExists($formPath);
+        $this->assertFileExists($formJsPath);
+        $this->assertStringStartsWith('@extends(\'brackets/admin-ui::admin.layout.default\')', File::get($formPath));
+        $this->assertStringContainsString(':action="\'{{ route(\'admin/profile/edit-password\', [\'category\' => $category]) }}\'"',
+            File::get($formPath));
+        $this->assertStringStartsWith('import AppForm from \'../../../../../Core/Resources/assets/js/app-components/Form/AppForm\';
+
+Vue.component(\'profile-edit-password-form\', {
+    mixins: [AppForm]', File::get($formJsPath));
+    }
+}
