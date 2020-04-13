@@ -39,7 +39,7 @@ class GenerateAdmin extends Command {
         $this->files = $files;
 
         $tableNameArgument = $this->argument('table_name');
-        $moduleArgument = $this->option('module');
+        $moduleArgument = $this->argument('module');
         $modelOption = $this->option('model-name');
         $controllerOption = $this->option('controller-name');
         $exportOption = $this->option('with-export');
@@ -168,12 +168,12 @@ class GenerateAdmin extends Command {
     protected function getArguments() {
         return [
             ['table_name', InputArgument::REQUIRED, 'Name of the existing table'],
+            ['module', InputArgument::REQUIRED, 'Specify custom module name'],
         ];
     }
 
     protected function getOptions() {
         return [
-            ['module', 'mo', InputOption::VALUE_REQUIRED, 'Specify custom module name'],
             ['model-name', 'm', InputOption::VALUE_OPTIONAL, 'Specify custom model name'],
             ['controller-name', 'c', InputOption::VALUE_OPTIONAL, 'Specify custom controller name'],
             ['seed', 's', InputOption::VALUE_NONE, 'Seeds the table with fake data'],
