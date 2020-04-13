@@ -41,6 +41,8 @@ class BulkDestroyRequest extends ClassGenerator {
             'modelDotNotation' => $this->modelDotNotation,
             'modelWithNamespaceFromDefault' => $this->modelWithNamespaceFromDefault,
             'modelVariableName' => $this->modelVariableName,
+            'modelFullName' => $this->modelFullName,
+            'moduleName' => $this->moduleName,
         ])->render();
     }
 

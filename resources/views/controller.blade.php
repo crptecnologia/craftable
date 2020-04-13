@@ -7,7 +7,7 @@ namespace {{ $controllerNamespace }};
 @if($export)
 use App\Exports\{{$exportBaseName}};
 @endif
-use App\Http\Controllers\Controller;
+use App\Http\Controller;
 @if(!$withoutBulk)
 use Modules\{{$moduleName}}\Http\Requests\{{ $modelWithNamespaceFromDefault }}\BulkDestroy{{ $modelBaseName }};
 @endif

@@ -36,11 +36,12 @@ class DestroyRequest extends ClassGenerator
     protected function buildClass()
     {
         return view('brackets/admin-generator::destroy-request', [
+            'moduleName' => $this->moduleName,
             'modelBaseName' => $this->modelBaseName,
             'modelDotNotation' => $this->modelDotNotation,
             'modelWithNamespaceFromDefault' => $this->modelWithNamespaceFromDefault,
             'modelVariableName' => $this->modelVariableName,
-            'moduleName' => $this->moduleName,
+            'modelFullName' => $this->modelFullName,
         ])->render();
     }
 

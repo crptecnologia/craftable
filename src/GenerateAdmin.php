@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -38,6 +39,7 @@ class GenerateAdmin extends Command {
         $this->files = $files;
 
         $tableNameArgument = $this->argument('table_name');
+        $moduleArgument = $this->option('module');
         $modelOption = $this->option('model-name');
         $controllerOption = $this->option('controller-name');
         $exportOption = $this->option('with-export');
@@ -48,12 +50,14 @@ class GenerateAdmin extends Command {
             'table_name' => $tableNameArgument,
             'class_name' => $modelOption,
             '--force' => $force,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:factory', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--seed' => $this->option('seed'),
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:controller', [
@@ -63,30 +67,35 @@ class GenerateAdmin extends Command {
             '--force' => $force,
             '--with-export' => $exportOption,
             '--without-bulk' => $withoutBulkOptions,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:request:index', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--force' => $force,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:request:store', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--force' => $force,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:request:update', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--force' => $force,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:request:destroy', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--force' => $force,
+            'module' => $moduleArgument
         ]);
 
         if(!$withoutBulkOptions) {
@@ -94,6 +103,7 @@ class GenerateAdmin extends Command {
                 'table_name' => $tableNameArgument,
                 '--model-name' => $modelOption,
                 '--force' => $force,
+                'module' => $moduleArgument
             ]);
         }
 
@@ -103,6 +113,7 @@ class GenerateAdmin extends Command {
             '--controller-name' => $controllerOption,
             '--with-export' => $exportOption,
             '--without-bulk' => $withoutBulkOptions,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:index', [
@@ -111,24 +122,28 @@ class GenerateAdmin extends Command {
             '--force' => $force,
             '--with-export' => $exportOption,
             '--without-bulk' => $withoutBulkOptions,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:form', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--force' => $force,
+            'module' => $moduleArgument
         ]);
 
         $this->call('admin:generate:lang', [
             'table_name' => $tableNameArgument,
             '--model-name' => $modelOption,
             '--with-export' => $exportOption,
+            'module' => $moduleArgument
         ]);
 
         if($exportOption){
             $this->call('admin:generate:export', [
                 'table_name' => $tableNameArgument,
                 '--force' => $force,
+                'module' => $moduleArgument
             ]);
         }
 
@@ -138,10 +153,11 @@ class GenerateAdmin extends Command {
                 '--model-name' => $modelOption,
                 '--force' => $force,
                 '--without-bulk' => $withoutBulkOptions,
+                'module' => $moduleArgument
             ]);
 
             if ($this->option('no-interaction') || $this->confirm('Do you want to attach generated permissions to the default role now?', true)) {
-               $this->call('migrate');
+                $this->call('migrate');
             }
         }
 
@@ -157,6 +173,7 @@ class GenerateAdmin extends Command {
 
     protected function getOptions() {
         return [
+            ['module', 'mo', InputOption::VALUE_REQUIRED, 'Specify custom module name'],
             ['model-name', 'm', InputOption::VALUE_OPTIONAL, 'Specify custom model name'],
             ['controller-name', 'c', InputOption::VALUE_OPTIONAL, 'Specify custom controller name'],
             ['seed', 's', InputOption::VALUE_NONE, 'Seeds the table with fake data'],
